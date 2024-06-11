@@ -32,7 +32,8 @@ class VendorController extends AdminController
         $grid->column('id', __('Id'))->sortable();
         $grid->column('first_name', __('First name'))->sortable();
         $grid->column('last_name', __('Last name'))->sortable();
-        $grid->column('email', __('Email'))->sortable();
+        $grid->column('business_name', __('Business name'))->sortable();
+        $grid->column('email', __('Email'))->sortable()->hide();
         $grid->column('profile_photo', __('Profile photo'))->hide();
         $grid->column('user_type', __('User Type'))
             ->label(
@@ -49,29 +50,29 @@ class VendorController extends AdminController
                     'regular' => 'Regular',
                 ]
             )
-            ->sortable();
+            ->sortable()->hide();
 
-        $grid->column('status', __('Status'))
+        $grid->column('vendor_status', __('Vendor Application Status'))
             ->label(
                 [
-                    'Active' => 'success',
+                    'Vendor' => 'success',
                     'Pending' => 'warning',
-                    'Banned' => 'danger',
+                    'Rejected' => 'danger',
+                    'Not a vendor' => 'default',
                 ],
-                'Active'
             )
             ->filter(
                 [
-                    'Active' => 'Active',
+                    'Vendor' => 'Vendor',
                     'Pending' => 'Pending',
-                    'Banned' => 'Banned',
+                    'Rejected' => 'Rejected',
+                    'Not a vendor' => 'Not a vendor',
                 ]
-            );
+            )->sortable();
 
 
-        $grid->column('sex', __('Sex'));
         $grid->column('phone_number', __('Phone number'))->sortable();
-        $grid->column('business_name', __('Business name'))->sortable();
+
         $grid->column('business_license_number', __('Business license number'))->hide();
         $grid->column('business_license_issue_authority', __('Business license issue authority'))->hide();
         $grid->column('business_license_issue_date', __('Business license issue date'))->hide();
@@ -175,23 +176,17 @@ class VendorController extends AdminController
         $form->text('business_whatsapp', __('Business whatsapp'));
         $form->text('business_email', __('Business email'));
         $form->image('business_logo', __('Business logo'));
-        $form->text('business_cover_photo', __('Business cover photo'));
+        $form->image('business_cover_photo', __('Business cover photo'));
         $form->text('business_cover_details', __('Business cover details'));
-        $form->radioCard('user_type', __('User type'))->default('regular')
+
+        //vendor status
+        $form->radioCard('vendor_status', __('Vendor Application Status'))->default('Not a vendor')
             ->options(
                 [
-                    'admin' => 'Admin',
-                    'Vendor' => 'Vendor',
-                    'regular' => 'Regular',
-                ]
-            )
-            ->rules('required');
-        $form->radioCard('status', __('status'))->default('regular')
-            ->options(
-                [
-                    'Active' => 'Active',
+                    'Vendor' => 'Approve as Vendor',
                     'Pending' => 'Pending',
-                    'Banned' => 'Banned',
+                    'Rejected' => 'Rejected',
+                    'Not a vendor' => 'Not a vendor',
                 ]
             )
             ->rules('required');

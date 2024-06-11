@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Stripe\Customer;
 
 class Order extends Model
 {
@@ -15,7 +14,7 @@ class Order extends Model
         parent::boot();
         //created
         self::created(function ($m) {
-            //Utils::sync_orders();
+ 
         });
         self::deleting(function ($m) {
             try {
@@ -28,50 +27,7 @@ class Order extends Model
             }
         });
     }
-
-    public function create_payment_link($stripe)
-    {
-        if (($this->stripe_id != null) && (strlen($this->stripe_id) > 0)) {
-            return;
-        }
-
-
-        $itmes = $this->get_items();
-        $line_items = [];
-        foreach ($itmes as $key => $item) {
-            $pro = Product::find($item->product);
-            if ($pro == null) {
-                continue;
-            }
-            if ($pro->stripe_price == null || strlen($pro->stripe_price) < 3) {
-                continue;
-            } 
-            $line_items[] = [
-                'price' => $pro->stripe_price,
-                'quantity' => $item->qty,
-            ];
-        }
-
-        $isSuccess = false;
-        $resp = "";
-        try {
-            $resp = $stripe->paymentLinks->create([
-                'currency' => 'cad',
-                'line_items' => $line_items,
-            ]);
-            $isSuccess = true;
-        } catch (\Throwable $th) {
-            $isSuccess = false;
-            $resp = $th->getMessage();
-        }
-
-        if ($isSuccess) {
-            $this->stripe_id = $resp->id;
-            $this->stripe_url = $resp->url;
-            $this->stripe_paid = 'No';
-            $this->save(); 
-        }
-    }
+ 
     public function get_items()
     {
         $items = [];

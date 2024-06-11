@@ -53,6 +53,19 @@ class User extends Authenticatable implements JWTSubject
         }
     }
 
+    //boot method to listen for events
+    protected static function boot()
+    {
+        parent::boot();
+        static::updating(function ($model) {
+            if ($model->vendor_status == "Vendor") {
+                $model->status = "Active";
+                $model->user_type = "Vendor";
+
+            }
+        });
+    }
+
     public function send_verification_code($email)
     {
         $u = $this;

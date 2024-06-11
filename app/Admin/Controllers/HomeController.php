@@ -35,22 +35,9 @@ class HomeController extends Controller
         $product = Product::orderBy('id', 'desc')->first();
 
 
-        //$key = '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';
-        //$stripe = new \Stripe\StripeClient($key);
-
-        // dd($product->id);
-        // $product->name = rand(1, 1000) . " " . $product->name;
-        // $product->sync($stripe);
-
-
-        /* $roders = \App\Models\Order::where([
-            'stripe_id' => null
-        ])->get(); */
-        //last order
+       
         $order = Order::orderBy('id', 'desc')->first();
-        //$order->create_payment_link($stripe);
-        //dd($order->stripe_url);
-
+    
         /* 
         $names = [
             "Abdul Rahman Mulinde",

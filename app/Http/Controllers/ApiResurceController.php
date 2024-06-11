@@ -144,11 +144,13 @@ class ApiResurceController extends Controller
         $u->business_email = $request->business_email;
         $u->business_cover_photo = $request->business_cover_photo;
         $u->business_cover_details = $request->business_cover_details;
+        $u->nin = $request->nin;
 
 
-        if ($u->status != 'Active') {
-            $u->status = 'Pending';
+        if ($u->vendor_status != 'Vendor') {
+            $u->vendor_status = 'Pending';
         }
+
 
         $images = [];
         if (!empty($_FILES)) {
@@ -162,6 +164,7 @@ class ApiResurceController extends Controller
         try {
             $u->save();
             $msg = "Submitted successfully.";
+            $u = Administrator::find($administrator_id);
             return $this->success($u, $msg, $code);
         } catch (\Throwable $th) {
             $msg = $th->getMessage();
