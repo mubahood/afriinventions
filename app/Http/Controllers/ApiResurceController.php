@@ -770,6 +770,37 @@ class ApiResurceController extends Controller
     }
 
 
+    public function order_get(Request $r)
+    {
+
+        $u = auth('api')->user();
+        if ($u == null) {
+            $administrator_id = Utils::get_user_id($r);
+            $u = Administrator::find($administrator_id);
+        }
+
+        if ($u == null) {
+            return $this->error('User not found.');
+        }
+        $orders = [];
+        $o = null;
+
+        foreach (Order::where([
+            'id' => $r->id
+        ])->get() as $order) {
+            $items = $order->get_items();
+            $order->items = json_encode($items);
+            $orders[] = $order;
+            $o = $order;
+            break;
+        }
+        if($o == null){
+            return $this->error('Order not found.'); 
+        }
+        return $this->success($o, $message = "Success!", 200);
+    }
+
+
     public function orders_cancel(Request $r)
     {
 
