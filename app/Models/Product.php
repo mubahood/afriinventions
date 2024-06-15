@@ -14,19 +14,18 @@ class Product extends Model
     {
         parent::boot();
         //created
-        self::created(function ($m) { 
+        self::created(function ($m) {
         });
 
         //updating
         self::updating(function ($m) {
             //old price_1
             $old_price_1 = $m->getOriginal('price_1');
-            $new_price_1 = $m->price_1; 
+            $new_price_1 = $m->price_1;
             return $m;
         });
         //updated
         self::updated(function ($m) {
- 
         });
 
         self::deleting(function ($m) {
@@ -45,12 +44,36 @@ class Product extends Model
     public function getFeaturePhotoAttribute($value)
     {
 
-        //check if value contains images/
-        if (str_contains($value, 'images/')) {
+        if ($value != null && strlen($value) > 4) {
+
+            //check if value contains images/
+            if (str_contains($value, 'images/')) {
+            } else {
+                $value = 'images/' . $value;
+            }
+            $path = Utils::docs_root() . "/storage/" . $value;
+
+            //check if file exists
+            if (file_exists($path)) {
+                return $value;
+            } else {
+                $pics = Image::where('product_id', $this->id)->get();
+                if ($pics->count() > 0) {
+                    $value = $pics[0]->src;
+                    $this->feature_photo = $value;
+                    $this->save();
+                }
+                $this->feature_photo = null;
+                $this->save();
+            }
+            if (str_contains($value, 'images/')) {
+            } else {
+                $value = 'images/' . $value;
+            }
             return $value;
         }
-        $value = 'images/' . $value;
-        return $value;
+        $logo = 'images/logo.png';
+        return $logo;
     }
 
     //getter for price_2
@@ -66,8 +89,8 @@ class Product extends Model
     }
 
 
-  
-   
+
+
     public function getRatesAttribute()
     {
         $imgs = Image::where('parent_id', $this->id)->orwhere('product_id', $this->id)->get();
@@ -103,7 +126,7 @@ class Product extends Model
         }
     }
 
-    
+
 
     protected $casts = [
         'summary' => 'json',

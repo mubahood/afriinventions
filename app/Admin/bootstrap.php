@@ -47,6 +47,9 @@ echo $last_product->price_1;
 die();
  */
 
+/*  $m = Product::find(915);
+ dd($m->feature_photo); */
+
 Utils::system_boot();
 
 

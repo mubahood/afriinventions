@@ -26,6 +26,11 @@ class Image extends Model
 
         self::deleting(function ($m) {
 
+            if (str_contains($m->src, 'logo.png')) {
+                throw new \Exception("Cannot delete logo.png");
+                return;
+            }
+
             try {
                 $src = Utils::docs_root() . "/storage/images/" . $m->src;
 
@@ -48,22 +53,24 @@ class Image extends Model
                 //throw $th;
             }
         });
-
-        self::created(function ($m) {
-            $m->create_thumbail();
-        });
     }
 
     public function getSrcAttribute($src)
     {
 
-        $source = Utils::docs_root() . "/storage/images/" . $src;
+        if (!str_contains($src, '/images')) {
+            $source = Utils::docs_root() . "/storage/images/" . $src;
+        } else {
+            $source = Utils::docs_root() . "/storage/" . $src;
+        }
+
         if (!file_exists($source)) {
+            $this->delete();
             return 'logo.png';
         }
         return $src;
     }
-    public function getThumbnailAttribute($src)
+    /*  public function getThumbnailAttribute($src)
     {
 
         $source = Utils::docs_root() . "/storage/images/" . $src;
@@ -71,17 +78,20 @@ class Image extends Model
             return 'logo.png';
         }
         return $src;
-    }
+    } */
 
     public function create_thumbail()
     {
         set_time_limit(-1);
         $src = $this->src;
         $source = Utils::docs_root() . "/storage/images/" . $this->src;
-        if (!file_exists($source)) { 
+        if (!file_exists($source)) {
             $this->delete();
             return;
         }
+        $this->thumbnail = $this->src;
+        $this->save();
+        return;
 
         $target = Utils::docs_root() . "/storage/images/thumb_" . $this->src;
 

@@ -39,6 +39,115 @@ class ApiResurceController extends Controller
     use ApiResponser;
 
 
+
+
+    public function orders_create(Request $r)
+    {
+        $u = auth('api')->user();
+        if ($u == null) {
+            $administrator_id = Utils::get_user_id($r);
+            $u = Administrator::find($administrator_id);
+        }
+
+        $items = [];
+        try {
+            $items = json_decode($r->items);
+        } catch (\Throwable $th) {
+            $items = [];
+        }
+        foreach ($items as $key => $value) {
+            $p = Product::find($value->product_id);
+            if ($p == null) {
+                return $this->error("Product #" . $value->product_id . " not found.");
+            }
+        }
+
+        if ($u == null) {
+            return $this->error('User not found.');
+        }
+
+        $delivery = null;
+        try {
+            $delivery = json_decode($r->delivery);
+        } catch (\Throwable $th) {
+            $delivery = null;
+        }
+
+        if ($delivery == null) {
+            return $this->error('Delivery information is missing.');
+        }
+        if ($delivery->customer_phone_number_1 == null) {
+            return $this->error('Phone number is missing.');
+        }
+
+        $order = new Order();
+        $order->user = $u->id;
+        $order->order_state = 0;
+        $order->temporary_id = 0;
+        $order->amount = 0;
+        $order->order_total = 0;
+        $order->payment_confirmation = '';
+        $order->description = '';
+        $order->mail = $u->email;
+        $delivery_amount = 0;
+        if ($delivery != null) {
+            try {
+
+                $order->order_details = json_encode($delivery);
+
+                $del_loc = DeliveryAddress::find($delivery->delivery_district);
+                if ($del_loc == null) {
+                    return $this->error('Delivery address not found.');
+                }
+
+                $delivery_amount = (int)($del_loc->shipping_cost);
+
+                $order->date_created = $delivery->date_created;
+                $order->date_updated = $delivery->date_updated;
+                $order->mail = $delivery->mail;
+                $order->delivery_district = $delivery->delivery_district;
+                $order->description = $delivery->description;
+                $order->customer_name = $delivery->customer_name;
+                $order->customer_phone_number_1 = $delivery->customer_phone_number_1;
+                $order->customer_phone_number_2 = $delivery->customer_phone_number_2;
+                $order->customer_address = $delivery->customer_address;
+            } catch (\Throwable $th) {
+            }
+        }
+
+        $order->save();
+
+
+        $order_total = 0;
+        foreach ($items as $key => $item) {
+            $product = Product::find($item->product_id);
+            if ($product == null) {
+                return $this->error("Product #" . $item->product_id . " not found.");
+            }
+            $oi = new OrderedItem();
+            $oi->order = $order->id;
+            $oi->product = $item->product_id;
+            $oi->qty = $item->product_quantity;
+            $oi->amount = $product->price_1;
+            $oi->color = $item->color;
+            $oi->size = $item->size;
+            $order_total += ($product->price_1 * $oi->qty);
+            $oi->save();
+        }
+        $order->amount = $order_total + $delivery_amount;
+        $order->order_total = $order->amount;
+
+
+        $order->save();
+        $order = Order::find($order->id);
+
+
+        return $this->success($order, $message = "Submitted successfully!", 200);
+    }
+
+
+
+
     public function become_vendor(Request $request)
     {
         $administrator_id = $request->user;
@@ -541,14 +650,20 @@ class ApiResurceController extends Controller
             return $this->error('User not found.');
         }
 
-        if (
+        /*  if (
             !isset($request->parent_id) ||
             $request->parent_id == null ||
             ((int)($request->parent_id)) < 1
         ) {
-            return $this->error('Local parent ID is missing.');
+            return $this->error('Local parent ID is missing. => '.$request->parent_id);
         }
-
+ */
+        if (!isset($request->parent_local_id) || (strlen($request->parent_local_id) < 5)) {
+            return $this->error('Parent local ID is missing. => ' . $request->parent_local_id);
+        }
+        if (!isset($request->local_id) || (strlen($request->local_id) < 5)) {
+            return $this->error('Local ID is missing.');
+        }
 
         if (
             empty($_FILES)
@@ -556,7 +671,18 @@ class ApiResurceController extends Controller
             return $this->error('No files found.');
         }
 
+        $pic = Image::where([
+            'local_id' => $request->local_id,
+        ])->first();
+        if ($pic != null) {
+            $pro = Product::where(['local_id' => $pic->parent_local_id])->first();
 
+            if ($pro != null) {
+                $pic->product_id = $pro->id;
+                $pic->save();
+            }
+            return $this->success($pic, 'File already uploaded.');
+        }
 
         $images = Utils::upload_images_2($_FILES, false);
         $_images = [];
@@ -569,14 +695,17 @@ class ApiResurceController extends Controller
         $msg = "";
         foreach ($images as $src) {
 
+
             $img = new Image();
             $img->administrator_id =  $administrator_id;
             $img->src =  $src;
-            $img->thumbnail =  null;
+            $img->thumbnail =  $src;
             $img->parent_endpoint =  $request->parent_endpoint;
+            $img->parent_local_id =  $request->parent_local_id;
+            $img->local_id =  $request->local_id;
             $img->type =  $request->type;
             $img->parent_id =  (int)($request->parent_id);
-            $pro = Product::where(['local_id' => $img->parent_id])->first();
+            $pro = Product::where(['local_id' => $img->parent_local_id])->first();
             $img->product_id =  null;
             if ($pro != null) {
                 $img->product_id =  $pro->id;
@@ -777,6 +906,31 @@ class ApiResurceController extends Controller
 
 
 
+    public function product_update_main_photo(Request $r)
+    {
+
+        $user_id = $r->user;
+        $u = User::find($user_id);
+        if ($u == null) {
+            return $this->error('User not found.');
+        }
+
+        $pro = Product::find($r->product_id);
+        if ($pro == null) {
+            return $this->error('Product not found.');
+        }
+        $image = Image::find($r->image_id);
+        if ($image == null) {
+            return $this->error('Image not found.');
+        }
+        $pro->feature_photo = $image->src;
+        $pro->save();
+        $pro = Product::find($pro->id);
+        return $this->success($pro, $message = "Updated successfully!", 200);
+    }
+
+
+
     public function product_create(Request $r)
     {
 
@@ -788,8 +942,7 @@ class ApiResurceController extends Controller
 
         if (
             !isset($r->id) ||
-            $r->name == null ||
-            ((int)($r->id)) < 1
+            $r->name == null
         ) {
             return $this->error('Local parent ID is missing.');
         }
@@ -802,21 +955,30 @@ class ApiResurceController extends Controller
         ) {
             $pro = Product::find($r->id);
             if ($pro == null) {
-                $pro = new Product();
                 $isEdit = false;
             } else {
                 $isEdit = true;
             }
-        } else {
-            $pro = new Product();
         }
+
+        if ($pro == null) {
+            $pro = Product::where([
+                'local_id' => $r->local_id
+            ])->first();
+            if ($pro == null) {
+                $pro = new Product();
+            } else {
+                $isEdit = true;
+            }
+        }
+
 
         $pro->name = $r->name;
         $pro->feature_photo = 'no_image.jpg';
         $pro->description = $r->description;
         $pro->price_1 = $r->price_1;
         $pro->price_2 = $r->price_2;
-        $pro->local_id = $r->id;
+        $pro->local_id = $r->local_id;
         $pro->summary = $r->data;
         $pro->p_type = $r->p_type;
         $pro->keywords = $r->keywords;
@@ -843,8 +1005,9 @@ class ApiResurceController extends Controller
         $pro->date_added = Carbon::now();
         $pro->date_updated = Carbon::now();
         $imgs = Image::where([
-            'parent_id' => $pro->local_id
+            'parent_local_id' => $r->local_id
         ])->get();
+
         if ($imgs->count() > 0) {
             $pro->feature_photo = $imgs[0]->src;
         }
@@ -853,10 +1016,11 @@ class ApiResurceController extends Controller
                 $img->product_id = $pro->id;
                 $img->save();
             }
+            $p = Product::find($pro->id);
             if ($isEdit) {
-                return $this->success(null, $message = "Updated successfully!", 200);
+                return $this->success($p, $message = "Updated successfully!", 200);
             }
-            return $this->success(null, $message = "Submitted successfully!", 200);
+            return $this->success($p, $message = "Submitted successfully!", 200);
         } else {
             return $this->error('Failed to upload product.');
         }
@@ -1028,11 +1192,15 @@ class ApiResurceController extends Controller
     {
         $pro = Image::find($r->id);
         if ($pro == null) {
+            $pro = Image::where('local_id', $r->id)->first();
+        }
+        if ($pro == null) {
             return $this->error('Image not found.');
         }
+        $product = Product::find($pro->product_id);
         try {
             $pro->delete();
-            return $this->success(null, $message = "Sussesfully deleted!", 200);
+            return $this->success($product, $message = "Sussesfully deleted!.", 200);
         } catch (\Throwable $th) {
             return $this->error('Failed to delete image because ' . $th->getMessage());
         }

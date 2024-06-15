@@ -9,7 +9,56 @@ use App\Models\Utils;
 use Dflydev\DotAccessData\Util;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
- 
+
+
+Route::match(['get', 'post'], '/pay', function () {
+    $id = 1;
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+    } else {
+        $order = \App\Models\Order::first();
+        $id = $order->id;
+    }
+    $order = \App\Models\Order::find($id);
+    $customer = $order->customer;
+    //dd($customer);
+    // $order->amount = 1;
+    // $order->save();
+
+    $task = null;
+    if (isset($_GET['task'])) {
+        $task = $_GET['task'];
+    }
+    if ($task == "success") {
+        $order->payment_confirmation = 1;
+        $data['get'] = $_GET;
+        $data['post'] = $_POST;
+        $order->stripe_id = json_encode($data);
+        $order->save();
+        die("Payment was successful");
+    } else if ($task == "canceled") {
+        $data['get'] = $_GET;
+        $data['post'] = $_POST;
+        $order->stripe_url = json_encode($data);
+        $order->save();
+        die("Payment was canceled");
+    } else if ($task == "update") {
+        $data['task'] = $task;
+        $data['get'] = $_GET;
+        $data['post'] = $_POST;
+        $order->order_details = json_encode($data);
+        $order->save();
+        //return 200 response
+        return response()->json(['status' => 'success', 'message' => 'Payment was updated.']);
+    }
+
+    $base_link = url('/pay?id=' . $id);
+    return view('pay', [
+        'order' => $order,
+        'base_link' => $base_link
+    ]);
+});
+
 Route::get('/process', function () {
 
     //set_time_limit(0);
@@ -127,7 +176,7 @@ Route::get('/process', function () {
     echo "Total: " . $tot . "<br>";
     die("=>done<=");
 });
-Route::get('/sync', function () { 
+Route::get('/sync', function () {
 })->name("gen");
 Route::get('/gen', function () {
     die(Gen::find($_GET['id'])->do_get());

@@ -187,8 +187,7 @@ class HomeController extends Controller
  */
      /*    $img = Image::where([])
             ->orderBy('id', 'desc')
-            ->first();
-        //$img->create_thumbail(); 
+            ->first(); 
         $path = env('APP_URL') . "/storage/images/";
         echo '<img width=500" src="' . $path . $img->src . '" >';
         echo '<img width=500" src="' . $path . $img->thumbnail . '" ><br>';
