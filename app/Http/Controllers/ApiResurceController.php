@@ -706,9 +706,9 @@ class ApiResurceController extends Controller
             $img->type =  $request->type;
             $img->parent_id =  (int)($request->parent_id);
             $pro = Product::where(['local_id' => $img->parent_local_id])->first();
-            $img->product_id =  null;
             if ($pro != null) {
                 $img->product_id =  $pro->id;
+                $img->parent_id =  $pro->id;
             }
             $img->size = 0;
             $img->note = '';

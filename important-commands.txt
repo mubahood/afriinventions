@@ -70,12 +70,13 @@ php artisan make:migration create_quotation_items_table
 php artisan make:migration create_quotations_table
 php artisan make:migration create_deliveries_table
 php artisan make:migration add_change_local_id_to_products --table=products
+//fd96a1eb4515c918a6de872cb231dd2f
 
 Encore\Admin\Auth\Database\Administrator::class,
 php artisan admin:make FormSr4Controller --model=App\FormSr4
 php artisan admin:make ParticipantController --model=App\\Participant
 php artisan admin:make UserController --model=App\\Models\\User
-php artisan admin:make UserController --model=App\\Models\\User
+php artisan admin:make ImageController --model=App\\Models\\Image
 
 
 

@@ -97,6 +97,12 @@ class Product extends Model
         return json_encode($imgs);
     }
 
+    //has many images
+    public function images()
+    {
+        return $this->hasMany(Image::class, 'product_id');
+    }
+
 
     protected $appends = ['category_text'];
     public function getCategoryTextAttribute()
@@ -111,18 +117,152 @@ class Product extends Model
     //getter for colors from json
     public function getColorsAttribute($value)
     {
-        $value = json_decode($value);
-        return $value;
+        $data = [];
+        if ($value == null) {
+            return $data;
+        }
+        //check if is string
+        if (is_string($value) && strlen($value) > 2) {
+            //check if is json
+            $isJson = false;
+            try {
+                if (json_decode($value) != null) {
+                    $data = json_decode($value);
+                    $isJson = true;
+                }
+            } catch (\Throwable $th) {
+                $isJson = false;
+            }
+            if (!$isJson) {
+                try {
+                    if (explode(',', $value) != null) {
+                        $data = explode(',', $value);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+        } else if (is_array($value)) {
+            $data = $value;
+        }
+
+        // replace data string ",],[ with empty and trim
+        $data = str_replace('"', '', $data);
+        $data = str_replace('[', '', $data);
+        $data = str_replace(']', '', $data);
+
+        return $data;
     }
 
     //setter for colors to json
     public function setColorsAttribute($value)
     {
-        if ($value != null) {
-            if (strlen($value) > 2) {
-                $value = json_encode($value);
-                $this->attributes['colors'] = $value;
+        $data = [];
+        if ($value == null) {
+            return json_encode($data);
+        }
+        //check if is string
+        if (is_string($value) && strlen($value) > 2) {
+            //check if is json
+            $isJson = false;
+            try {
+                if (json_decode($value) != null) {
+                    $data = json_decode($value);
+                    $isJson = true;
+                }
+            } catch (\Throwable $th) {
+                $isJson = false;
             }
+            if (!$isJson) {
+                try {
+                    if (explode(',', $value) != null) {
+                        $data = explode(',', $value);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+        } else if (is_array($value)) {
+            $data = $value;
+        }
+        if ($value != null) {
+            $this->attributes['colors'] = json_encode($data);
+        }
+    }
+
+    //getter for sizes
+    public function getSizesAttribute($value)
+    {
+        $data = [];
+        if ($value == null) {
+            return $data;
+        }
+        //check if is string
+        if (is_string($value) && strlen($value) > 2) {
+            //check if is json
+            $isJson = false;
+            try {
+                if (json_decode($value) != null) {
+                    $data = json_decode($value);
+                    $isJson = true;
+                }
+            } catch (\Throwable $th) {
+                $isJson = false;
+            }
+            if (!$isJson) {
+                try {
+                    if (explode(',', $value) != null) {
+                        $data = explode(',', $value);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+        } else if (is_array($value)) {
+            $data = $value;
+        }
+
+        // replace data string ",],[ with empty and trim
+        $data = str_replace('"', '', $data);
+        $data = str_replace('[', '', $data);
+        $data = str_replace(']', '', $data);
+
+        return $data;
+    }
+
+    //setter for sizes to json
+    public function setSizesAttribute($value)
+    {
+        $data = [];
+        if ($value == null) {
+            return json_encode($data);
+        }
+        //check if is string
+        if (is_string($value) && strlen($value) > 2) {
+            //check if is json
+            $isJson = false;
+            try {
+                if (json_decode($value) != null) {
+                    $data = json_decode($value);
+                    $isJson = true;
+                }
+            } catch (\Throwable $th) {
+                $isJson = false;
+            }
+            if (!$isJson) {
+                try {
+                    if (explode(',', $value) != null) {
+                        $data = explode(',', $value);
+                    }
+                } catch (\Throwable $th) {
+                    //throw $th;
+                }
+            }
+        } else if (is_array($value)) {
+            $data = $value;
+        }
+        if ($value != null) {
+            $this->attributes['sizes'] = json_encode($data);
         }
     }
 

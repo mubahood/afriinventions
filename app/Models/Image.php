@@ -27,6 +27,7 @@ class Image extends Model
 
         self::deleting(function ($m) {
 
+
             if (str_contains($m->src, 'logo.png')) {
                 return true;
             }
@@ -63,16 +64,17 @@ class Image extends Model
             return $src;
         }
 
-        if (!str_contains($src, '/images')) {
+        if (!str_contains($src, 'images/')) {
             $source = Utils::docs_root() . "/storage/images/" . $src;
         } else {
             $source = Utils::docs_root() . "/storage/" . $src;
         }
 
+
         if (!file_exists($source)) {
             $sql = "DELETE FROM images WHERE id = " . $this->id;
             DB::delete($sql);
-            return 'logo.png';
+            return 'images/logo.png';
         }
         return $src;
     }

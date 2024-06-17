@@ -68,4 +68,5 @@ Route::group([
     $router->resource('product-orders', ProductOrderController::class);
 
     $router->resource('delivery-addresses', DeliveryAddressController::class);
+    $router->resource('images', ImageController::class);
 });

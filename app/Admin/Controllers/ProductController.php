@@ -2,6 +2,7 @@
 
 namespace App\Admin\Controllers;
 
+use App\Models\Image;
 use App\Models\Product;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -134,7 +135,16 @@ class ProductController extends AdminController
      */
     protected function form()
     {
+        //$d = Image::find(2822);
+        //dd($d->src); 
         $form = new Form(new Product());
+        /*   $p = Product::find(921);
+        $colors = $p->colors;
+        dd($colors);
+       
+        $p->name .= '1';
+        $p->save();
+        die('done'); */
 
 
         if ($form->isCreating()) {
@@ -155,6 +165,8 @@ class ProductController extends AdminController
                 $cats->pluck('category', 'id')
             )
             ->rules('required');
+        /*    $form->text('colors', __('colors'));
+        return $form;  */
 
         $form->radio('has_colors', __('Has colors?'))
             ->options([
@@ -228,6 +240,31 @@ class ProductController extends AdminController
         */
         /*      $form->keyValue('summary', __('Data'));
  */
+        //has many images
+        $form->hasMany('images', 'Images', function (Form\NestedForm $form) {
+            /*  
+created_at	
+updated_at	
+administrator_id	
+src	
+thumbnail	
+parent_id	
+size	
+deleted_at	
+type	
+product_id	
+parent_endpoint	
+note	
+local_id	
+parent_local_id	
+	
+ 
+            */
+            $u = Auth::user();
+            $form->hidden('administrator_id', 'Administrator')->default($u->id)->readOnly()->rules('required');
+            $form->image('src', 'Image')->rules('required')->uniqueName();
+            //$form->text('id', 'id'); 
+        });
 
 
         return $form;
