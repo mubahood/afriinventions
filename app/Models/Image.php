@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Dflydev\DotAccessData\Util;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Image extends Model
 {
@@ -27,7 +28,7 @@ class Image extends Model
         self::deleting(function ($m) {
 
             if (str_contains($m->src, 'logo.png')) {
-                return true;  
+                return true;
             }
 
             try {
@@ -57,6 +58,11 @@ class Image extends Model
     public function getSrcAttribute($src)
     {
 
+        //CHECK IF $src == logo.png
+        if (str_contains($src, 'logo.png')) {
+            return $src;
+        }
+
         if (!str_contains($src, '/images')) {
             $source = Utils::docs_root() . "/storage/images/" . $src;
         } else {
@@ -64,7 +70,8 @@ class Image extends Model
         }
 
         if (!file_exists($source)) {
-            $this->delete();
+            $sql = "DELETE FROM images WHERE id = " . $this->id;
+            DB::delete($sql);
             return 'logo.png';
         }
         return $src;
