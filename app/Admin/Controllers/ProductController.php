@@ -263,7 +263,8 @@ parent_local_id
             $u = Auth::user();
             $form->hidden('administrator_id', 'Administrator')->default($u->id)->readOnly()->rules('required');
             $form->image('src', 'Image')->rules('required')->uniqueName();
-            //$form->text('id', 'id'); 
+            $form->text('product_id', 'product_id'); 
+            $form->text('parent_id', 'parent_id'); 
         });
 
 

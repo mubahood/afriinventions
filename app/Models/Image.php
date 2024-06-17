@@ -64,6 +64,20 @@ class Image extends Model
             return $src;
         }
 
+        if ($this->product_id != null && strlen($this->product_id) > 0) {
+            if ($this->parent_id == null || strlen($this->parent_id) < 1) {
+                $this->parent_id = $this->product_id;
+                $this->save();
+            }
+        }
+        if ($this->parent_id != null && strlen($this->parent_id) > 0) {
+            if ($this->product_id == null || strlen($this->product_id) < 1) {
+                $this->product_id = $this->parent_id;
+                $this->save();
+            }
+        }
+
+
         if (!str_contains($src, 'images/')) {
             $source = Utils::docs_root() . "/storage/images/" . $src;
         } else {
@@ -119,5 +133,7 @@ class Image extends Model
     {
         return Carbon::parse($this->updated_at)->timestamp;
     }
+
+
     protected $appends = ['updated_at_text'];
 }
