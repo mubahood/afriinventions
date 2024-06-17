@@ -27,8 +27,7 @@ class Image extends Model
         self::deleting(function ($m) {
 
             if (str_contains($m->src, 'logo.png')) {
-                throw new \Exception("Cannot delete logo.png");
-                return;
+                return true;  
             }
 
             try {
