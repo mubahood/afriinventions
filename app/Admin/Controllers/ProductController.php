@@ -149,6 +149,13 @@ class ProductController extends AdminController
         $form->decimal('price_1', __('Selling Price'))
             ->rules('required');
 
+        $cats = \App\Models\ProductCategory::all();
+        $form->select('category', __('Category'))
+            ->options(
+                $cats->pluck('category', 'id')
+            )
+            ->rules('required');
+
         $form->radio('has_colors', __('Has colors?'))
             ->options([
                 'Yes' => 'Yes',
@@ -215,17 +222,12 @@ class ProductController extends AdminController
 
         $form->image('feature_photo', __('Feature photo'))
             ->rules('required');
-        $cats = \App\Models\ProductCategory::all();
-        $form->select('category', __('Category'))
-            ->options(
-                $cats->pluck('category', 'id')
-            )
-            ->rules('required');
+
         /* $form->url('url', __('Url')); 
                 $form->decimal('rates', __('Rates'));
         */
-        $form->keyValue('summary', __('Data'));
-
+        /*      $form->keyValue('summary', __('Data'));
+ */
 
 
         return $form;
