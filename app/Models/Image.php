@@ -73,7 +73,7 @@ class Image extends Model
         if ($this->parent_id != null && strlen($this->parent_id) > 0) {
             if ($this->product_id == null || strlen($this->product_id) < 1) {
                 $this->product_id = $this->parent_id;
-                $this->save();
+                $this->save(); 
             }
         }
 
