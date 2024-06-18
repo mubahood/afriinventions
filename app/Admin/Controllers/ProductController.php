@@ -27,6 +27,7 @@ class ProductController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Product());
+        $grid->disableBatchActions(); 
 
         $grid->actions(function ($actions) {
             $actions->disableView();
@@ -59,10 +60,10 @@ class ProductController extends AdminController
         $grid->column('price_1', __('Selling Price'))
             ->sortable()
             ->editable();
-        $grid->picture('feature_photo', __('Photo'))
-            ->lightbox(['width' => 50, 'height' => 50])
-            ->sortable();
-        $grid->column('date_updated', __('Date updated'));
+
+        //feature_photo
+        $grid->column('feature_photo', __('Feature photo'))
+            ->lightbox(['width' => 50, 'height' => 50]); 
         $grid->column('user', __('User'))
             ->display(function ($user) {
                 $u =  \App\Models\User::find($user);
