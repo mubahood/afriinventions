@@ -1,6 +1,7 @@
-<?php 
-$order->amount = 10;
-?><!DOCTYPE html>
+<?php
+//$order->amount = 10;
+?>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>

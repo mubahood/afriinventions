@@ -68,8 +68,8 @@ class DeliveryAddressController extends AdminController
         $form = new Form(new DeliveryAddress());
 
         $form->text('address', __('Address'))->rules('required');
-        $form->decimal('latitude', __('Latitude'));
-        $form->decimal('longitude', __('Longitude'));
+        $form->hidden('latitude', __('Latitude'))->default(0);
+        $form->hidden('longitude', __('Longitude'))->default(0);
         $form->decimal('shipping_cost', __('Shipping cost'));
 
         return $form;
