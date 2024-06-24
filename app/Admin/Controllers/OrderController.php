@@ -31,7 +31,7 @@ class OrderController extends AdminController
         $grid->model()->orderBy('id', 'desc');
         $grid->quickSearch('customer_name')->placeholder('Search by customer name');
         $grid->column('id', __('Id'))->sortable();
-        $grid->disableBatchActions();
+        //$grid->disableBatchActions();
         $grid->column('created_at', __('Created'))
             ->display(function ($created_at) {
                 return Utils::my_date_time($created_at);
