@@ -15,7 +15,7 @@ class OrderedItemController extends AdminController
      *
      * @var string
      */
-    protected $title = 'OrderedItem';
+    protected $title = 'Ordered Items';
 
     /**
      * Make a grid builder.
@@ -25,6 +25,7 @@ class OrderedItemController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new OrderedItem());
+        $grid->model()->orderBy('id', 'desc');
 
         $grid->column('id', __('Id'));
         $grid->column('created_at', __('Created at'));
