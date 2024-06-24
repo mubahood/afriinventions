@@ -71,4 +71,13 @@ class Order extends Model
     {
         return $this->belongsTo(User::class, 'user');
     }
+
+    //getter for items
+    public function getItemsAttribute()
+    {
+        return $this->get_items();
+    } 
+
+    //appends for items
+    protected $appends = ['items']; 
 }
