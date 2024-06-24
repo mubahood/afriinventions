@@ -66,6 +66,8 @@ Route::group([
     $router->resource('event-bookings', EventBookingController::class);
     $router->resource('products', ProductController::class);
     $router->resource('product-orders', ProductOrderController::class);
+    $router->resource('orders', OrderController::class);
+    $router->resource('ordered-items', OrderedItemController::class);
 
     $router->resource('delivery-addresses', DeliveryAddressController::class);
     $router->resource('images', ImageController::class);

@@ -4,7 +4,7 @@ ADD `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `created_at`;
 
 
 
-ALTER TABLE `orders` 
+ALTER TABLE `OrderedItems` 
 CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT, add PRIMARY KEY (`id`), 
 ADD `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `id`,
 ADD `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP AFTER `created_at`,
@@ -12,8 +12,8 @@ ADD `customer_name` TEXT NULL DEFAULT NULL,
 ADD `customer_phone_number_1` TEXT NULL DEFAULT NULL,
 ADD `customer_phone_number_2` TEXT NULL DEFAULT NULL,
 ADD `customer_address` TEXT NULL DEFAULT NULL,
-ADD `order_total` TEXT NULL DEFAULT NULL,
-ADD `order_details` TEXT NULL DEFAULT NULL; 
+ADD `OrderedItem_total` TEXT NULL DEFAULT NULL,
+ADD `OrderedItem_details` TEXT NULL DEFAULT NULL; 
 
 
 activity_name
@@ -60,7 +60,7 @@ php artisan make:migration create_counselling_centres_table
 php artisan make:migration create_counselling_centres_table 
 php artisan make:migration create_job_applications_table 
 php artisan make:migration create_products_table 
-php artisan make:migration create_product_orders_table 
+php artisan make:migration create_product_OrderedItems_table 
 php artisan make:migration create_crop_protocols_table 
 php artisan make:migration create_garden_table 
 php artisan make:migration create_garden_activities_table 
@@ -76,7 +76,7 @@ Encore\Admin\Auth\Database\Administrator::class,
 php artisan admin:make FormSr4Controller --model=App\FormSr4
 php artisan admin:make ParticipantController --model=App\\Participant
 php artisan admin:make UserController --model=App\\Models\\User
-php artisan admin:make ImageController --model=App\\Models\\Image
+php artisan admin:make OrderedItemController --model=App\\Models\\OrderedItem
 
 
 
@@ -107,7 +107,7 @@ php artisan admin:make CounsellingCentreController --model=App\Models\Counsellin
 php artisan admin:make JobController --model=App\Models\Job
 php artisan admin:make JobApplicationController --model=App\Models\JobApplication
 php artisan admin:make ProductController --model=App\Models\Product
-php artisan admin:make ProductOrderController --model=App\Models\ProductOrder
+php artisan admin:make ProductOrderedItemController --model=App\Models\ProductOrderedItem
 php artisan admin:make CropController --model=App\Models\Crop
 php artisan admin:make CropProtocolController --model=App\Models\CropProtocol
 php artisan admin:make GardenController --model=App\Models\Garden
@@ -160,7 +160,7 @@ php artisan make:model CounsellingCentre
 php artisan make:model Job
 php artisan make:model JobApplication
 php artisan make:model Product
-php artisan make:model ProductOrder
+php artisan make:model ProductOrderedItem
 php artisan make:model Crop
 php artisan make:model Garden
 php artisan make:model GardenActivity

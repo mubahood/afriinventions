@@ -14,7 +14,12 @@ class Order extends Model
         parent::boot();
         //created
         self::created(function ($m) {
- 
+            //send email to admin
+            try {
+                self::send_mail_to_admin($m);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
         });
         self::deleting(function ($m) {
             try {
@@ -26,6 +31,16 @@ class Order extends Model
                 //throw $th;
             }
         });
+    }
+
+    //static send mail to admin
+    public static function send_mail_to_admin($order)
+    {
+        try {
+            //
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
  
     public function get_items()
