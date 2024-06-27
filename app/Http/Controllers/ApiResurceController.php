@@ -759,13 +759,22 @@ class ApiResurceController extends Controller
         }
         $orders = [];
 
-        foreach (Order::where([
-            'user' => $u->id
-        ])->get() as $order) {
-            $items = $order->get_items();
-            $order->items = json_encode($items);
-            $orders[] = $order;
+        $u = Administrator::find($u->id);
+        $conds = [];
+        if ($u->isRole('admin')) {
+            $conds = [];
+        } else {
+            $conds = [
+                'user' => $u->id
+            ];
         }
+        //$conds['id'] = 70;
+
+        $orders = Order::where($conds)->get();
+        // foreach ( as $order) {
+        //     //$items = $order->get_items();
+        //    // $order->items = json_encode($items);
+        // }
         return $this->success($orders, $message = "Success!", 200);
     }
 
@@ -794,8 +803,8 @@ class ApiResurceController extends Controller
             $o = $order;
             break;
         }
-        if($o == null){
-            return $this->error('Order not found.'); 
+        if ($o == null) {
+            return $this->error('Order not found.');
         }
         return $this->success($o, $message = "Success!", 200);
     }

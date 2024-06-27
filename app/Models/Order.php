@@ -75,7 +75,7 @@ class Order extends Model
     //getter for items
     public function getItemsAttribute()
     {
-        return $this->get_items();
+        return json_encode($this->get_items());
     } 
 
     //appends for items
