@@ -7,7 +7,7 @@ use App\Models\Utils;
     }
 
     .installed {
-        color: #6b3b00;
+        color: #062e7f;
         margin-right: 10px;
     }
 
@@ -34,7 +34,7 @@ use App\Models\Utils;
     <div class="card-body py-2 py-md-3">
         @foreach ($items as $i)
             <div class="d-flex align-items-center mb-4 case-item">
-                <div style="border-left: solid #6b3b00 5px;" class="flex-grow-1 pl-2 pl-md-3 ">
+                <div style="border-left: solid #062e7f 5px;" class="flex-grow-1 pl-2 pl-md-3 ">
                     <a href="{{ admin_url('/movements/' . $i->id . '/edit') }}"
                         class="text-dark text-hover-primary">
                         <b>{{ Str::of($i->body)->limit(40) }}</b>
@@ -46,7 +46,7 @@ use App\Models\Utils;
                 </div>
                 <a href="{{ admin_url('/movements/' . $i->id . '/edit') }}"
                     class="text-white py-1 px-1 rounded text-center"
-                    style="background-color: #6b3b00; line-height: 1.6rem; font-weight: 600;" title="View all animal">
+                    style="background-color: #062e7f; line-height: 1.6rem; font-weight: 600;" title="View all animal">
                     Review Permit </a>
             </div>
         @endforeach

@@ -7,7 +7,7 @@ use App\Models\Utils;
     }
 
     .installed {
-        color: #6b3b00;
+        color: #062e7f;
         margin-right: 10px;
     }
 
@@ -34,7 +34,7 @@ use App\Models\Utils;
     <div class="card-body py-2 py-md-3">
         @foreach ($items as $i)
             <div class="d-flex align-items-center mb-4 case-item">
-                <div style="border-left: solid #6b3b00 5px;" class="flex-grow-1 pl-2 pl-md-3 ">
+                <div style="border-left: solid #062e7f 5px;" class="flex-grow-1 pl-2 pl-md-3 ">
                     <a href="{{ admin_url('/events?animal_id=' . $i->animal_id) }}" class="text-dark text-hover-primary">
                         <b>{{ Str::of($i->body)->limit(40) }}</b>
                     </a>
@@ -44,7 +44,7 @@ use App\Models\Utils;
                     </span>
                 </div>
                 <a href="{{ admin_url('/events?animal_id=' . $i->animal_id) }}" class="badge "
-                    style="background-color: #6b3b00;" title="View all animal"> <i class="fa fa-chevron-right"></i> </a>
+                    style="background-color: #062e7f;" title="View all animal"> <i class="fa fa-chevron-right"></i> </a>
             </div>
         @endforeach
     </div>
