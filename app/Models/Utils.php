@@ -39,9 +39,9 @@ class Utils extends Model
         }
     }
 
-
-
-
+ 
+   
+ 
     public static function sendNotification(
         $msg,
         $receiver,
@@ -464,6 +464,7 @@ class Utils extends Model
 
     public static function docs_root()
     {
+        return public_path(); 
         $r = $_SERVER['DOCUMENT_ROOT'] . "";
 
         if (str_contains($r, 'htdocs')) {
@@ -484,8 +485,8 @@ class Utils extends Model
         //check if $r does not contain public and add it
         if (!(str_contains($r, 'public'))) {
             $r = $r . "/public";
-        }
-
+        } 
+        
         return $r;
     }
 
@@ -506,18 +507,11 @@ class Utils extends Model
                 isset($file['error']) &&
                 isset($file['size'])
             ) {
-                /*  $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+                $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
                 $file_name = time() . "-" . rand(100000, 1000000) . "." . $ext;
-                $destination = Utils::docs_root() . '/storage/images/' . $file_name;
+                $destination = public_path() . '/storage/images/' . $file_name;
 
-                $res = move_uploaded_file($file['tmp_name'], $destination); */
-
-                //get file extension
-                $file_extension = $file->getClientOriginalExtension();
-                $file_name = time() . "_" . rand(100000000, 1000000000) . "." . $file_extension;
-                $public_path = public_path() . "/storage/images";
-                $res = $file->move($public_path, $file_name);
-                $url = 'images/' . $file_name;
+                $res = move_uploaded_file($file['tmp_name'], $destination);
                 if (!$res) {
                     continue;
                 }
