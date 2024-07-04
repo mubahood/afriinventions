@@ -11,7 +11,7 @@ return [
     | login page.
     |
     */
-    'name' => 'Hambren - Admin',
+    'name' => env('APP_NAME') . ' - Admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ return [
     | `img` tag, eg '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo' => '<b>Hambren</b> admin',
+    'logo' => '<b>' . env('APP_NAME') . '</b> admin',
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ return [
     | '<img src="http://logo-url" alt="Admin logo">'.
     |
     */
-    'logo-mini' => '<b>Hambren</b>',
+    'logo-mini' => '<b>'.env('APP_NAME').'</b>',
 
     /*
     |--------------------------------------------------------------------------

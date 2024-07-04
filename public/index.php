@@ -1,31 +1,5 @@
 <?php
 
-/* $url = "https://app.hambren.com/api/orders";
-
-$curl = curl_init($url);
-curl_setopt($curl, CURLOPT_URL, $url);
-curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-
-//for debug only!
-curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
-curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-
-
-
-$headers = [
-    'User-Id: 143444,12',
-];
-
-curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-
-$resp = curl_exec($curl);
-curl_close($curl);
-echo "<pre>";
-print_r(json_decode($resp));
-
-die(); */
-?><?php
-
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Http\Request;
 

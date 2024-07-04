@@ -34,10 +34,11 @@
             <div class="row  justify-content-center mb-4 mb-md-5">
 
                 <div class="col-lg-8 lead text-center">
-                    <h1>Hambren - project profile</h1>
-                    
-                    <a href="javascript:;" class="btn btn-primary btn-lg text-uppercase my-5">DOWNLOAD PROFILE <i class="fa fa-file"></i></a>
-                    
+                    <h1>{{ env('APP_NAME') }} - project profile</h1>
+
+                    <a href="javascript:;" class="btn btn-primary btn-lg text-uppercase my-5">DOWNLOAD PROFILE <i
+                            class="fa fa-file"></i></a>
+
                 </div>
             </div>
         </div>

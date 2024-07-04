@@ -35,9 +35,9 @@ class HomeController extends Controller
         $product = Product::orderBy('id', 'desc')->first();
 
 
-       
+
         $order = Order::orderBy('id', 'desc')->first();
-    
+
         /* 
         $names = [
             "Abdul Rahman Mulinde",
@@ -185,7 +185,7 @@ class HomeController extends Controller
         $p->save();
         die('onde');
  */
-     /*    $img = Image::where([])
+        /*    $img = Image::where([])
             ->orderBy('id', 'desc')
             ->first(); 
         $path = env('APP_URL') . "/storage/images/";
@@ -209,7 +209,7 @@ class HomeController extends Controller
 
         $u = Auth::user();
         $content
-            ->title('Hambren - Dashboard')
+            ->title(env('APP_NAME') . ' - Dashboard')
             ->description('Hello ' . $u->name . "!");
         return $content;
 
