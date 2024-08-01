@@ -60,7 +60,7 @@ class Order extends Model
             throw $th;
         } 
         */
-        $ORDER_LINK = url('/admin/orders');
+        $ORDER_LINK = admin_url('orders');
         try {
             $admin_mails = [
                 'mubahood360@gmail.com',
