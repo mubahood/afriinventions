@@ -63,11 +63,12 @@ class Order extends Model
         $ORDER_LINK = url('/admin/orders');
         try {
             $admin_mails = [
-                'mubahood360@gmail.com'
+                'mubahood360@gmail.com',
+                'morakeneo271@gmail.com'
             ];
             $data['email'] = $admin_mails;
             $data['name'] = "Admin";
-            $data['subject'] = "New Order";
+            $data['subject'] = "New Order - #" . $order->id;
             $data['body'] = "<br>Dear Admin,<br>";
             $data['body'] .= "<br>A new order has been placed.<br><br>";
             $data['body'] .= "Order ID: <b>#" . $order->id . "</b><br>";
@@ -81,8 +82,8 @@ class Order extends Model
         } catch (\Throwable $th) {
             //throw $th;
         }
-    } 
- 
+    }
+
     public function get_items()
     {
         $items = [];
@@ -116,8 +117,8 @@ class Order extends Model
     public function getItemsAttribute()
     {
         return json_encode($this->get_items());
-    } 
+    }
 
     //appends for items
-    protected $appends = ['items']; 
+    protected $appends = ['items'];
 }
