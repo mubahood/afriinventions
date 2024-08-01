@@ -37,7 +37,7 @@ class User extends Authenticatable implements JWTSubject
             $data['email'] = $u->username;
         }
         $data['name'] = $u->name;
-        $data['subject'] = "Hambren - Password Reset";
+        $data['subject'] = env('APP_NAME')." - Password Reset";
         $data['body'] = "<br>Dear " . $u->name . ",<br>";
         $data['body'] .= "<br>Please use the code below to reset your password.<br><br>";
         $data['body'] .= "CODE: <b>" . $u->intro . "</b><br>";

@@ -209,7 +209,7 @@ class HomeController extends Controller
 
         $u = Auth::user();
         $content
-            ->title('Hambren - Dashboard')
+            ->title(env('APP_NAME').' - Dashboard')
             ->description('Hello ' . $u->name . "!");
         return $content;
 
