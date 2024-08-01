@@ -35,14 +35,54 @@ class Order extends Model
 
     //static send mail to admin
     public static function send_mail_to_admin($order)
-    {
+    {/* 
+        sample mail formart
+
+                $u = $this;
+        $u->intro = rand(100000, 999999);
+        $u->save();
+        $data['email'] = $u->email;
+        if ($u->email == null || $u->email == "") {
+            $data['email'] = $u->username;
+        }
+        $data['name'] = $u->name;
+        $data['subject'] = env('APP_NAME') . " - Password Reset";
+        $data['body'] = "<br>Dear " . $u->name . ",<br>";
+        $data['body'] .= "<br>Please use the code below to reset your password.<br><br>";
+        $data['body'] .= "CODE: <b>" . $u->intro . "</b><br>";
+        $data['body'] .= "<br>Thank you.<br><br>";
+        $data['body'] .= "<br><small>This is an automated message, please do not reply.</small><br>";
+        $data['view'] = 'mail-1';
+        $data['data'] = $data['body'];
         try {
-            //
+            Utils::mail_sender($data);
+        } catch (\Throwable $th) {
+            throw $th;
+        } 
+        */
+        $ORDER_LINK = url('/admin/orders');
+        try {
+            $admin_mails = [
+                'mubahood360@gmail.com'
+            ];
+            $data['email'] = $admin_mails;
+            $data['name'] = "Admin";
+            $data['subject'] = "New Order";
+            $data['body'] = "<br>Dear Admin,<br>";
+            $data['body'] .= "<br>A new order has been placed.<br><br>";
+            $data['body'] .= "Order ID: <b>#" . $order->id . "</b><br>";
+            $data['body'] .= "Customer: <b>" . $order->customer->name . "</b><br>";
+            $data['body'] .= "Review Order: <a href='$ORDER_LINK'>Click here</a><br>";
+            $data['body'] .= "<br>Thank you.<br><br>";
+            $data['body'] .= "<br><small>This is an automated message, please do not reply.</small><br>";
+            $data['view'] = 'mail-1';
+            $data['data'] = $data['body'];
+            Utils::mail_sender($data);
         } catch (\Throwable $th) {
             //throw $th;
         }
     }
- 
+
     public function get_items()
     {
         $items = [];
@@ -76,8 +116,8 @@ class Order extends Model
     public function getItemsAttribute()
     {
         return json_encode($this->get_items());
-    } 
+    }
 
     //appends for items
-    protected $appends = ['items']; 
+    protected $appends = ['items'];
 }

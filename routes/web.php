@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/test', function () {
+    //get last order by id
+    dd('as');
+    $order = \App\Models\Order::latest()->first();
+    dd($order);
+    //send_mail_to_admin
+    \App\Models\Order::send_mail_to_admin($order);
+    die("test done");
+});
 Route::match(['get', 'post'], '/pay', function () {
     $id = 1;
     if (isset($_GET['id'])) {
