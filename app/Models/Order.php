@@ -64,7 +64,8 @@ class Order extends Model
         try {
             $admin_mails = [
                 'mubahood360@gmail.com',
-                'morakeneo271@gmail.com'
+                'morakeneo271@gmail.com',
+                'salesafriinventions@outlook.com'
             ];
             $data['email'] = $admin_mails;
             $data['name'] = "Admin";
