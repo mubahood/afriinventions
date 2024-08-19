@@ -5,11 +5,68 @@ use App\Http\Controllers\MainController;
 use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Models\Gen;
+use App\Models\Product;
 use App\Models\Utils;
 use Dflydev\DotAccessData\Util;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Route;
 
+
+Route::get('/product', function (Request $request) {
+    $product = Product::find($request->p);
+    $logo = url('/logo.png');
+    $title = 'Buy African Products Online';
+
+    if ($product != null) {
+        $logo = url('/storage/' . $product->feature_photo);
+        $title = 'Buy ' . $product->name . ' at R ' . number_format($product->price_1) . ' - AfriInventions';
+    }
+
+    return view('product', [
+        'product' => $product,
+        'logo' => $logo,
+        'photo' => $logo,
+        'title' => $title,
+        'name' => $title,
+        'android' => 'https://play.google.com/store/apps/details?id=afriinventions.za&hl=en_AU',
+        'ios' => 'https://apps.apple.com/at/app/afriinventions-app/id6499291152',
+    ]);
+    /* 
+    "id" => 909
+    "name" => "ljk"
+    "metric" => 1
+    "currency" => 1
+    "description" => "hjgcfokjhg"
+    "summary" => null
+    "price_1" => 889
+    "price_2" => 7799
+    "feature_photo" => "1718233645-437267.jpg"
+    "rates" => 1
+    "date_added" => "2024-06-12"
+    "date_updated" => "2024-06-12 23:13:45"
+    "user" => 118
+    "category" => 36
+    "sub_category" => null
+    "supplier" => 118
+    "url" => null
+    "status" => 0
+    "in_stock" => 1
+    "keywords" => null
+    "p_type" => null
+    "local_id" => "1718233627185-50837"
+    "updated_at" => "2024-06-12 23:13:45"
+    "created_at" => "2024-06-12 23:13:45"
+    "stripe_id" => null
+    "stripe_price" => null
+    "has_colors" => "No"
+    "colors" => null
+    "has_sizes" => "No"
+    "sizes" => null
+    
+    */
+    dd($product);
+});
 
 Route::get('/test', function () {
     //get last order by id
@@ -184,8 +241,7 @@ Route::get('/process', function () {
     echo "Total: " . $tot . "<br>";
     die("=>done<=");
 });
-Route::get('/sync', function () {
-})->name("gen");
+Route::get('/sync', function () {})->name("gen");
 Route::get('/gen', function () {
     die(Gen::find($_GET['id'])->do_get());
 })->name("gen");
