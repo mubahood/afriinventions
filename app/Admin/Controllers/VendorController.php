@@ -190,6 +190,10 @@ class VendorController extends AdminController
                 ]
             )
             ->rules('required');
+
+        /* vendor_verification_mail_sent */
+        $form->hidden('vendor_verification_mail_sent', __('Vendor Verification Mail Sent'))->default('No');
+
         $form->disableCreatingCheck();
         $form->disableReset();
         $form->disableViewCheck();
