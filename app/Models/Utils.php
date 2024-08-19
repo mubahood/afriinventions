@@ -590,8 +590,9 @@ class Utils extends Model
         $v = User::where([
             'user_type' => "Vendor"
         ])->first();
-        $v->send_vendor_verification_mail_sent();
-        dd($v);
+        if ($v != null) {
+            $v->send_vendor_verification_mail_sent();
+        }
         return;
         foreach (
             $r = Invoice::where([
