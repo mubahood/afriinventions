@@ -115,6 +115,11 @@ class OrderController extends AdminController
     protected function detail($id)
     {
         $show = new Show(Order::findOrFail($id));
+        $o = Order::find($id);
+        echo "<pre>";
+        print_r($o);
+        echo "</pre>";
+        return;
 
         $show->field('id', __('Id'));
         $show->field('created_at', __('Created at'));
