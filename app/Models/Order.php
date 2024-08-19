@@ -88,9 +88,11 @@ class Order extends Model
     public function get_items()
     {
         $items = [];
-        foreach (OrderedItem::where([
-            'order' => $this->id
-        ])->get() as $_item) {
+        foreach (
+            OrderedItem::where([
+                'order' => $this->id
+            ])->get() as $_item
+        ) {
             $pro = Product::find($_item->product);
             if ($pro == null) {
                 continue;
