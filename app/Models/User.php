@@ -31,7 +31,7 @@ class User extends Authenticatable implements JWTSubject
         if ($this->vendor_verification_mail_sent == "Yes") {
             return;
         }
-        if ($this->user_type != "Vendor") {
+        if ($this->vendor_status != "Pending") {
             return;
         }
         $verification_link = admin_url('requests/' . $this->id . '/edit');
@@ -98,7 +98,7 @@ class User extends Authenticatable implements JWTSubject
 
         //updated
         static::updated(function ($model) {
-            if ($model->vendor_status == "Vendor") {
+            if ($model->vendor_status == "Pending") {
                 if ($model->vendor_verification_mail_sent != "Yes") {
                     $model->send_vendor_verification_mail_sent();
                 }
