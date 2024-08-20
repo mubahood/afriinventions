@@ -28,7 +28,7 @@ class VendorController extends AdminController
         $grid->model([
             'status' => 'Pending',
         ])->orderBy('id', 'desc');
-        $grid->disableBatchActions();
+        // $grid->disableBatchActions();
         $grid->column('id', __('Id'))->sortable();
         $grid->column('first_name', __('First name'))->sortable();
         $grid->column('last_name', __('Last name'))->sortable();
