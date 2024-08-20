@@ -110,6 +110,22 @@ class Order extends Model
         return $items;
     }
 
+    //getter for status
+/*     public function getOrderStateAttribute()
+    {
+        $status = "Pending";
+        if ($this->status == 1) {
+            $status = "Processing";
+        } else if ($this->status == 2) {
+            $status = "Completed";
+        } else if ($this->status == 3) {
+            $status = "Canceled";
+        } else if ($this->status == 4) {
+            $status = "Failed";
+        }
+        return $status;
+    } */
+
     //belongs to customer
     public function customer()
     {
